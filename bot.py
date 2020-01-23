@@ -17,13 +17,12 @@ async def on_ready():
     print('------')
 
 @bot.command(pass_context=True)
-@commands.cooldown(1, 30, commands.BucketType.user)
-async def overrideAssassinate(ctx):
-    override = !override
+async def overrideAssassinate(ctx, setBool: bool):
+    override = bool
     await ctx.send("Assassinate Override set to: " + override)
     
 @bot.command(pass_context=True)
-@commands.cooldown(1, 30, commands.BucketType.user)
+@commands.cooldown(1, 43200, commands.BucketType.user)
 async def assassinate(ctx, user: str):
     
     tz_MST = pytz.timezone('Canada/Mountain') 
