@@ -19,7 +19,7 @@ async def on_ready():
 async def assassinate(ctx, user: str):
     server = bot.get_guild(667585691621916702)
     announcements = bot.get_channel(668143653709152296)
-    assassin-log = bot.get_channel(668323099288010752);
+    assassinLog = bot.get_channel(668323099288010752)
     x = server.members
     assassin = ctx.message.author
     odds = random.randint(0,100)
@@ -36,7 +36,7 @@ async def assassinate(ctx, user: str):
     y = [y[0],y[1],y[2],assassin.mention]
     random.shuffle(y)
 
-    await assassin-log("Assassin: " + assasin.mention + "Target: " + targetMember.mention)
+    await assassinLog("Assassin: " + assasin.mention + "Target: " + targetMember.mention)
     
     if odds < 15:
         roles = targetMember.roles
