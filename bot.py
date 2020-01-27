@@ -20,6 +20,7 @@ murderOverride = False
 global assassinateOverride
 assassinateOverride = False
 
+
 @bot.event
 async def on_ready():
     print('Logged in as')
@@ -44,12 +45,11 @@ async def candidates(ctx):
     for x in candidateList:
         x = int(x)
         print(x)
-        x = ctx.message.server.get_member(x)
+        x = ctx.message.guild.get_member(x)
         await ctx.send(x.mention)
 
 @bot.command(pass_context=True)
-@commands.has_role('Chancellor')
-@commands.has_role('Game Manager')
+@commands.has_any_role('Chancellor', 'Game Manager')
 async def arrest(ctx, user: str):
 	server = bot.get_guild(667585691621916702)
 	announcements = bot.get_channel(668143653709152296)
@@ -69,8 +69,7 @@ async def arrest(ctx, user: str):
 		ctx.send("You cannot arrest Game Managers or Bots")
 		
 @bot.command(pass_context=True)
-@commands.has_role('Chancellor')
-@commands.has_role('Game Manager')
+@commands.has_any_role('Chancellor', 'Game Manager')
 async def execute(ctx, user: str):
 	server = bot.get_guild(667585691621916702)
 	announcements = bot.get_channel(668143653709152296)
