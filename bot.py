@@ -48,10 +48,11 @@ async def candidates(ctx):
         await ctx.send(x.mention)
 
 @bot.command(pass_context=True)
-@commands.has_role('Chancellor', 'Game Manager')
+@commands.has_role('Chancellor')
+@commands.has_role('Game Manager')
 async def arrest(ctx, user: str):
 	server = bot.get_guild(667585691621916702)
-    announcements = bot.get_channel(668143653709152296)
+	announcements = bot.get_channel(668143653709152296)
 	user = server.get_member_named(user)
 	prisonerRoles = user.roles
 	gm = discord.utils.get(server.roles, name="Game Manager")	
@@ -59,19 +60,20 @@ async def arrest(ctx, user: str):
 	botUser = discord.utils.get(server.roles, name="Bot Management")
 	if gm not in prisonerRoles and bot not in prisonerRoles:
 		everyone = discord.utils.get(server.roles, name ="@everyone")
-        prisonerRoles.remove(everyone)
-        await user.remove_roles(*roles)
-        prisoner = discord.utils.get(server.roles, name="Prisoner")
-        await targetMember.add_roles(prisoner)
-        await announcements.send(ctx.author.mention + " arrested " + user.mention + "!")
-    else:
-    	ctx.send("You cannot arrest Game Managers or Bots")
+		prisonerRoles.remove(everyone)
+		await user.remove_roles(*roles)
+		prisoner = discord.utils.get(server.roles, name="Prisoner")
+		await targetMember.add_roles(prisoner)
+		await announcements.send(ctx.author.mention + " arrested " + user.mention + "!")
+	else:
+		ctx.send("You cannot arrest Game Managers or Bots")
 		
 @bot.command(pass_context=True)
-@commands.has_role('Chancellor', 'Game Manager')
+@commands.has_role('Chancellor')
+@commands.has_role('Game Manager')
 async def execute(ctx, user: str):
 	server = bot.get_guild(667585691621916702)
-    announcements = bot.get_channel(668143653709152296)
+	announcements = bot.get_channel(668143653709152296)
 	user = server.get_member_named(user)
 	prisonerRoles = user.roles
 	gm = discord.utils.get(server.roles, name="Game Manager")	
@@ -79,13 +81,13 @@ async def execute(ctx, user: str):
 	botUser = discord.utils.get(server.roles, name="Bot Management")
 	if gm not in prisonerRoles and bot not in prisonerRoles:
 		everyone = discord.utils.get(server.roles, name ="@everyone")
-        prisonerRoles.remove(everyone)
-        await user.remove_roles(*roles)
-        prisoner = discord.utils.get(server.roles, name="Talking Dead")
-        await targetMember.add_roles(prisoner)
-        await announcements.send(ctx.author.mention + " executed " + user.mention + "!")
-    else:
-    	ctx.send("You cannot kill Game Managers or Bots")
+		prisonerRoles.remove(everyone)
+		await user.remove_roles(*roles)
+		prisoner = discord.utils.get(server.roles, name="Talking Dead")
+		await targetMember.add_roles(prisoner)
+		await announcements.send(ctx.author.mention + " executed " + user.mention + "!")
+	else:
+		ctx.send("You cannot kill Game Managers or Bots")
 		
 
 
