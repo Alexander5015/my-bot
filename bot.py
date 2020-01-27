@@ -7,7 +7,7 @@ from datetime import datetime
 import pytz
 import math
 
-bot = commands.Bot(command_prefix='$', description='A bot that runs WesternKingdoms.')
+bot = commands.Bot(command_prefix='$', description="A bot that runs WesternKingdoms. This game is playable with roles Talking Dead, Prisoner, Peasant, Nobility,  Chancellor, Death Scythe, Blade of Vitality and Game Manager. Chancellor is able to promote and demote Peasants and Nobility, arrest citizens, and execute citizens. Nobles are able to assassinate each other, with a 30% success rate, and a 50% chance of being caught. The Death Scythe grants its user a 25% increase in success rate(55%) and the Blade of Vitality reduces assassination attempt success rates against its user by 25%(5%). These items negate each other. Advisors, Soldiers, Guards, Mercenary and Satan are currently in development. Also, items currently being developed are Thief's Cloak, ,Skeleton Key, and Fortress. Upcoming gameplay includes income, taxation, land and battles. Pollmaster is currently used to hold elections, but will be replaced by this bot in future updates. UnbelievaBoat is currently used for economy, and will be integrated through an API to interface with this bot.")
 global override
 override = False
 
@@ -46,6 +46,49 @@ async def candidates(ctx):
         print(x)
         x = ctx.message.server.get_member(x)
         await ctx.send(x.mention)
+
+@bot.command(pass_context=True)
+@commands.has_role('Chancellor', 'Game Manager')
+async def arrest(ctx, user: str):
+	server = bot.get_guild(667585691621916702)
+    announcements = bot.get_channel(668143653709152296)
+	user = server.get_member_named(user)
+	prisonerRoles = user.roles
+	gm = discord.utils.get(server.roles, name="Game Manager")	
+	chancellor = discord.utils.get(server.roles, name="Chancellor")
+	botUser = discord.utils.get(server.roles, name="Bot Management")
+	if gm not in prisonerRoles and bot not in prisonerRoles:
+		everyone = discord.utils.get(server.roles, name ="@everyone")
+        prisonerRoles.remove(everyone)
+        await user.remove_roles(*roles)
+        prisoner = discord.utils.get(server.roles, name="Prisoner")
+        await targetMember.add_roles(prisoner)
+        await announcements.send(ctx.author.mention + " arrested " + user.mention + "!")
+    else:
+    	ctx.send("You cannot arrest Game Managers or Bots")
+		
+@bot.command(pass_context=True)
+@commands.has_role('Chancellor', 'Game Manager')
+async def execute(ctx, user: str):
+	server = bot.get_guild(667585691621916702)
+    announcements = bot.get_channel(668143653709152296)
+	user = server.get_member_named(user)
+	prisonerRoles = user.roles
+	gm = discord.utils.get(server.roles, name="Game Manager")	
+	chancellor = discord.utils.get(server.roles, name="Chancellor")
+	botUser = discord.utils.get(server.roles, name="Bot Management")
+	if gm not in prisonerRoles and bot not in prisonerRoles:
+		everyone = discord.utils.get(server.roles, name ="@everyone")
+        prisonerRoles.remove(everyone)
+        await user.remove_roles(*roles)
+        prisoner = discord.utils.get(server.roles, name="Talking Dead")
+        await targetMember.add_roles(prisoner)
+        await announcements.send(ctx.author.mention + " executed " + user.mention + "!")
+    else:
+    	ctx.send("You cannot kill Game Managers or Bots")
+		
+
+
 @bot.command(pass_context=True)
 @commands.has_role('Game Manager')
 async def overrideMurder(ctx, setBool: bool):
