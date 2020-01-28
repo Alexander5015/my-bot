@@ -2,12 +2,12 @@ import discord
 import random
 import asyncio
 from discord.ext import commands
+from discord.ext import unbelieva
 
 from datetime import datetime
 import pytz
 import math
-
-bot = commands.Bot(command_prefix='$', description="A bot that runs WesternKingdoms. This game is playable with roles Talking Dead, Prisoner, Peasant, Nobility,  Chancellor, Death Scythe, Blade of Vitality and Game Manager. Chancellor is able to promote and demote Peasants and Nobility, arrest citizens, and execute citizens. Nobles are able to assassinate each other, with a 30% success rate, and a 50% chance of being caught. The Death Scythe grants its user a 25% increase in success rate(55%) and the Blade of Vitality reduces assassination attempt success rates against its user by 25%(5%). These items negate each other. Advisors, Soldiers, Guards, Mercenary and Satan are currently in development. Also, items currently being developed are Thief's Cloak, ,Skeleton Key, and Fortress. Upcoming gameplay includes income, taxation, land and battles. Pollmaster is currently used to hold elections, but will be replaced by this bot in future updates. UnbelievaBoat is currently used for economy, and will be integrated through an API to interface with this bot.")
+bot = commands.Bot(command_prefix='$', description="A bot that runs Western Kingdoms")
 global override
 override = False
 
@@ -20,6 +20,7 @@ murderOverride = False
 global assassinateOverride
 assassinateOverride = False
 
+unbelieva.inject()
 
 @bot.event
 async def on_ready():
@@ -35,6 +36,32 @@ async def overrideAssassinate(ctx, setBool: bool):
     assassinateOverride = setBool
     await ctx.send("Assassinate Override set to: " + str(assassinateOverride))
     
+@commands.has_any_role('Peasant', 'Nobility', 'Chancellor')
+@bot.command(pass_context=True)
+async def register(ctx):
+    file = open("./candidates.txt", "a")
+    file.append("\n" + str(ctx.author.id))
+
+@bot.command(pass_context=True)
+async def jury(ctx):
+	server = bot.get_guild(667585691621916702)
+	courtCh = bot.get_channel(671761760348536863)
+	
+	memberList = server.members
+	
+	court = discord.utils.get(server.roles, name = "Court")
+	peasant = discord.utils.get(server.roles, name = "Peasant")
+	noble = discord.utils.get(server.roles, name = "Nobility")
+	
+	jurorList = []
+	for member in memberList:
+		if(peasant in member.roles or noble in member.roles) and court not in member.roles:
+			jurorList.append(member.mention)            
+	random.shuffle(jurorList)
+	await ctx.message.delete()
+	await courtCh.send("The jurors are " + jurorList[0] + ", " + jurorList[1] + ", " + jurorList[2] + ", " + jurorList[3] + ", " + jurorList[4] + ", and " + jurorList[5])
+
+
 @bot.command(pass_context=True)
 async def candidates(ctx):
     await ctx.send("Candidates:")
@@ -61,12 +88,31 @@ async def arrest(ctx, user: str):
 	if gm not in prisonerRoles and bot not in prisonerRoles:
 		everyone = discord.utils.get(server.roles, name ="@everyone")
 		prisonerRoles.remove(everyone)
-		await user.remove_roles(*roles)
+		await user.remove_roles(*prisonerRoles)
 		prisoner = discord.utils.get(server.roles, name="Prisoner")
-		await targetMember.add_roles(prisoner)
+		await user.add_roles(prisoner)
 		await announcements.send(ctx.author.mention + " arrested " + user.mention + "!")
 	else:
-		ctx.send("You cannot arrest Game Managers or Bots")
+		await ctx.send("You cannot arrest Game Managers or Bots")
+
+@bot.command(pass_context=True)
+@commands.has_any_role('Chancellor', 'Game Manager')
+async def noble(ctx, user: str):
+	server = bot.get_guild(667585691621916702)
+	announcements = bot.get_channel(668143653709152296)
+	user = server.get_member_named(user)
+	targetRoles = user.roles
+	peasant = discord.utils.get(server.roles, name="Peasant")
+	if peasant in targetRoles:
+		everyone = discord.utils.get(server.roles, name ="@everyone")
+		targetRoles.remove(everyone)
+		await user.remove_roles(*targetRoles)
+		noble = discord.utils.get(server.roles, name="Nobility")
+		await user.add_roles(noble)
+		await announcements.send(ctx.author.mention + " promoted " + user.mention + "!")
+	else:
+		await ctx.send("You can only promote peasants")
+
 		
 @bot.command(pass_context=True)
 @commands.has_any_role('Chancellor', 'Game Manager')
@@ -81,12 +127,12 @@ async def execute(ctx, user: str):
 	if gm not in prisonerRoles and bot not in prisonerRoles:
 		everyone = discord.utils.get(server.roles, name ="@everyone")
 		prisonerRoles.remove(everyone)
-		await user.remove_roles(*roles)
+		await user.remove_roles(*prisonerRoles)
 		prisoner = discord.utils.get(server.roles, name="Talking Dead")
-		await targetMember.add_roles(prisoner)
+		await user.add_roles(prisoner)
 		await announcements.send(ctx.author.mention + " executed " + user.mention + "!")
 	else:
-		ctx.send("You cannot kill Game Managers or Bots")
+		await ctx.send("You cannot kill Game Managers or Bots")
 		
 
 
