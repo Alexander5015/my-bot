@@ -52,7 +52,7 @@ async def randomMember(ctx):
 		if(peasant in member.roles or noble in member.roles) and court not in member.roles:
 			hitList.append(member.mention)            
 	random.shuffle(hitList)
-	ctx.send(hitList)
+	ctx.send(hitList[0])
 @bot.command(pass_context=True)
 async def jury(ctx):
 	server = bot.get_guild(667585691621916702)
