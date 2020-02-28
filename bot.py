@@ -49,7 +49,7 @@ async def randomMember(ctx):
 	peasant = discord.utils.get(server.roles, name = "Peasant")
 	hitList = []
 	for member in memberList:
-		if(peasant in member.roles or noble in member.roles) and court not in member.roles:
+		if peasant in member.roles:
 			hitList.append(member.mention)            
 	random.shuffle(hitList)
 	ctx.send(hitList[0])
