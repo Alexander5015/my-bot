@@ -42,11 +42,26 @@ async def register(ctx):
     file = open("./candidates.txt", "a")
     file.append("\n" + str(ctx.author.id))
 
+@bot.command(pass_context=True)	
+async def randomMember(ctx):
+	server = bot.get_guild(667585691621916702)
+	memberList = server.members
+	peasant = discord.utils.get(server.roles, name = "Peasant")
+	hitList = []
+	for member in memberList:
+		if(peasant in member.roles or noble in member.roles) and court not in member.roles:
+			hitList.append(member.mention)            
+	random.shuffle(hitList)
+	ctx.send(hitList)
 @bot.command(pass_context=True)
 async def jury(ctx):
 	server = bot.get_guild(667585691621916702)
 	courtCh = bot.get_channel(671761760348536863)
-	
+	jurorList = []
+	for member in memberList:
+		if(peasant in member.roles or noble in member.roles) and court not in member.roles:
+			jurorList.append(member.mention)            
+	random.shuffle(jurorList)
 	memberList = server.members
 	
 	court = discord.utils.get(server.roles, name = "Court")
