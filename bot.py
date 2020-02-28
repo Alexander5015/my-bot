@@ -2,7 +2,7 @@ import discord
 import random
 import asyncio
 from discord.ext import commands
-from discord.ext import unbelieva
+#from discord.ext import unbelieva
 
 from datetime import datetime
 import pytz
@@ -20,7 +20,7 @@ murderOverride = False
 global assassinateOverride
 assassinateOverride = False
 
-unbelieva.inject()
+#unbelieva.inject()
 
 @bot.event
 async def on_ready():
