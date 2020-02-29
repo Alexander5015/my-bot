@@ -52,6 +52,9 @@ async def randomMember(ctx):
 		if peasant in member.roles:
 			hitList.append(member.mention)            
 	random.shuffle(hitList)
+	moneyList = [500,1000,1500,2000]
+	random.shuffle(moneyList)
+	await ctx.send(moneyList[0])
 	await ctx.send(hitList[0])
 @bot.command(pass_context=True)
 async def jury(ctx):
