@@ -4,10 +4,13 @@ import asyncio
 from discord.ext import commands
 #from discord.ext import unbelieva
 
+from firebase import firebase
 from datetime import datetime
 import pytz
 import math
+
 bot = commands.Bot(command_prefix='$', description="A bot that runs Western Kingdoms")
+firebase = firebase.FirebaseApplication('https://kingdombot-12e41.firebaseio.com/hitman-jobs', None)
 global override
 override = False
 
@@ -43,11 +46,20 @@ async def register(ctx):
     file.append("\n" + str(ctx.author.id))
 
 @bot.command(pass_context=True)	
-async def randomMember(ctx):
+async def hitman(ctx):
 	server = bot.get_guild(667585691621916702)
 	memberList = server.members
 	peasant = discord.utils.get(server.roles, name = "Peasant")
 	hitList = []
+	hitmen = firebase.get('/client-actions/hitman-jobs', None)
+	global break 
+	break = false;
+	for hitman in hitmen:
+		if hitman == ctx.author.id:
+			await ctx.send("You already have a job!")
+			break = true;
+	if break:
+		break;
 	for member in memberList:
 		if peasant in member.roles:
 			hitList.append(member.mention)            
