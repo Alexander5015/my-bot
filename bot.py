@@ -390,4 +390,7 @@ async def on_command_error(ctx, error):
         print(error)
 
 
-bot.run("NDU3Njk5ODY4NjM1NTYxOTg1.XijKIg.PnrExzKy0mwuXYuzXIBdQtnc-XM")
+bot.run("Bot Token Here")
+
+
+
